@@ -1,238 +1,167 @@
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
-<title>SCHEDULO</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SCHEDULO</title>
 
-<style>
-.logo{
-display:flex;
-align-items:center;
-gap:10px;
-margin-bottom:20px;
-}
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
 
-body{
-font-family:Arial;
-background:#f3f6fb;
-margin:0;
-}
+  <style>
+    body{
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg,#eef2ff,#f8fafc);
+      margin:0;
+      padding:0;
+    }
 
-header{
-background:white;
-padding:15px;
-display:flex;
-justify-content:space-between;
-align-items:center;
-box-shadow:0 2px 10px rgba(0,0,0,0.05);
-}
+    header{
+      background:white;
+      padding:15px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      box-shadow:0 2px 10px rgba(0,0,0,0.05);
+    }
 
-.logo{
-font-size:20px;
-font-weight:bold;
-color:#2d5be3;
-}
+    .logo{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      font-size:20px;
+      font-weight:700;
+      color:#2d5be3;
+    }
 
-.container{
-padding:30px;
-}
+    .container{
+      padding:30px;
+    }
 
-h1{
-margin-bottom:5px;
-}
+    h1,h2,h3,h4{
+      margin:0 0 10px 0;
+    }
 
-.card{
-background:white;
-padding:20px;
-border-radius:15px;
-box-shadow:0 5px 15px rgba(0,0,0,0.05);
-margin-top:20px;
-}
+    .card{
+      background:white;
+      padding:20px;
+      border-radius:15px;
+      box-shadow:0 5px 15px rgba(0,0,0,0.05);
+      margin-top:20px;
+    }
 
-.tasks{
-display:flex;
-gap:20px;
-flex-wrap:wrap;
-}
+    .tasks{
+      display:flex;
+      gap:20px;
+      flex-wrap:wrap;
+    }
 
-.task{
-background:white;
-border:1px solid #eee;
-padding:15px;
-border-radius:12px;
-width:200px;
-}
+    .task{
+      background:white;
+      border:1px solid #eee;
+      padding:15px;
+      border-radius:12px;
+      width:200px;
+    }
 
-.overdue{
-border:2px solid #ff4d4d;
-}
+    .overdue{
+      border:2px solid #ff4d4d;
+    }
 
-button{
-background:#2d5be3;
-color:white;
-border:none;
-padding:10px 20px;
-border-radius:10px;
-cursor:pointer;
-}
+    button{
+      background:#2d5be3;
+      color:white;
+      border:none;
+      padding:10px 20px;
+      border-radius:10px;
+      cursor:pointer;
+    }
 
-</style>
+    ul{
+      padding-left:20px;
+    }
+  </style>
 </head>
 
 <body>
 
 <header>
-<div class="logo">Schedulo</div>
-<button onclick="tambahTugas()">Tambah Tugas</button>
+  <div class="logo">
+    <img src="schedulo-logo.png" width="40" alt="Logo">
+    SCHEDULO
+  </div>
+  <button onclick="tambahTugas()">Tambah Tugas</button>
 </header>
 
 <div class="container">
+  <h1>Selamat Datang 👋</h1>
+  <p id="tanggal"></p>
 
-<h1>Selamat Datang 👋</h1>
-<p id="tanggal"></p>
+  <div class="card">
+    <h3>Jadwal Piket Hari Ini</h3>
+    <ul id="piket"></ul>
+  </div>
 
-<div class="card">
-
-<h3>Jadwal Piket Hari Ini</h3>
-
-<ul id="piket"></ul>
-
-</div>
-
-<div class="card">
-
-<h3>Daftar Tugas Belajar</h3>
-
-<div class="tasks" id="tasks"></div>
-
-</div>
-
+  <div class="card">
+    <h3>Daftar Tugas Belajar</h3>
+    <div class="tasks" id="tasks"></div>
+  </div>
 </div>
 
 <script>
-
 const piket={
-
-Senin:["Steven Agustino","Lewis","Kaka Morenlo","Novita","Angela Natalie","Felicia Eza M.","Cherise Everlyn"],
-
-Selasa:["Gregorius Yasera B.","Meylani Catherine","Michael Steven C.K.C","Calista Gabriela M.","Ailennia Aretha","Rhys Clayton"],
-
-Rabu:["Valentino I.","Sandy","Lu Falensia W.","Viktoria Clara","Aurellia Latishia W.","Santo Wijaya"],
-
-Kamis:["Elisa Agatha","Luvia Valens","Juliana Silvia","Erick Castiandy","Jeremiah Claudius M.","Delvin Juan Putra"],
-
-Jumat:["Albert Steven","Gabriel Ibanez K.","Hernan Fransisko","Marcelia","Elsama Jhelisca","Cindy Gracelia L.","Callysta Christabel"],
-
-Sabtu:["Ningsi Oktagrillislia","Elrica Chloe","Lenggo Alfredo","Dominic Bianca L.","Beny","Ceryl Arueputri"]
-
+  Senin:["Steven Agustino","Lewis","Kaka Morenlo","Novita","Angela Natalie","Felicia Eza M.","Cherise Everlyn"],
+  Selasa:["Gregorius Yasera B.","Meylani Catherine","Michael Steven C.K.C","Calista Gabriela M.","Ailennia Aretha","Rhys Clayton"],
+  Rabu:["Valentino I.","Sandy","Lu Falensia W.","Viktoria Clara","Aurellia Latishia W.","Santo Wijaya"],
+  Kamis:["Elisa Agatha","Luvia Valens","Juliana Silvia","Erick Castiandy","Jeremiah Claudius M.","Delvin Juan Putra"],
+  Jumat:["Albert Steven","Gabriel Ibanez K.","Hernan Fransisko","Marcelia","Elsama Jhelisca","Cindy Gracelia L.","Callysta Christabel"],
+  Sabtu:["Ningsi Oktagrillislia","Elrica Chloe","Lenggo Alfredo","Dominic Bianca L.","Beny","Ceryl Arueputri"]
 };
 
-
 let tugas=[
-
-{mapel:"Matematika",deskripsi:"PR Persamaan Kuadrat",deadline:"13 Maret 2026"},
-{mapel:"B.Inggris",deskripsi:"Mempresentasikan Cerita",deadline:"12 Maret 2026"},
-{mapel:"Geografi",deskripsi:"Latihan Pemahaman",deadline:"14 Maret 2026"}
-
+  {mapel:"Matematika",deskripsi:"PR Persamaan Kuadrat",deadline:"13 Maret 2026"},
+  {mapel:"B.Inggris",deskripsi:"Mempresentasikan Cerita",deadline:"12 Maret 2026"},
+  {mapel:"Geografi",deskripsi:"Latihan Pemahaman",deadline:"14 Maret 2026"}
 ];
-
 
 const hari=new Date().toLocaleDateString("id-ID",{weekday:"long"});
 const tanggal=new Date().toLocaleDateString("id-ID",{dateStyle:"full"});
-
 document.getElementById("tanggal").innerText=tanggal;
 
 const piketList=document.getElementById("piket");
-
 if(piket[hari]){
-
-piket[hari].forEach(nama=>{
-
-let li=document.createElement("li");
-li.textContent=nama;
-piketList.appendChild(li);
-
-});
-
+  piket[hari].forEach(nama=>{
+    let li=document.createElement("li");
+    li.textContent=nama;
+    piketList.appendChild(li);
+  });
 }
 
 const taskContainer=document.getElementById("tasks");
-
 function tampilkanTugas(){
-
-taskContainer.innerHTML="";
-
-tugas.forEach(t=>{
-
-let div=document.createElement("div");
-
-div.className="task overdue";
-
-div.innerHTML=`
-
-<h4>${t.mapel}</h4>
-<p>${t.deskripsi}</p>
-<small>DL: ${t.deadline}</small>
-
-`;
-
-taskContainer.appendChild(div);
-
-});
-
+  taskContainer.innerHTML="";
+  tugas.forEach(t=>{
+    let div=document.createElement("div");
+    div.className="task overdue";
+    div.innerHTML=`
+      <h4>${t.mapel}</h4>
+      <p>${t.deskripsi}</p>
+      <small>DL: ${t.deadline}</small>
+    `;
+    taskContainer.appendChild(div);
+  });
 }
 
 function tambahTugas(){
-
-let mapel=prompt("Nama mapel:");
-let des=prompt("Deskripsi tugas:");
-let dl=prompt("Deadline:");
-
-tugas.push({mapel:mapel,deskripsi:des,deadline:dl});
-
-tampilkanTugas();
-
+  let mapel=prompt("Nama mapel:");
+  let des=prompt("Deskripsi tugas:");
+  let dl=prompt("Deadline:");
+  tugas.push({mapel:mapel,deskripsi:des,deadline:dl});
+  tampilkanTugas();
 }
 
 tampilkanTugas();
-
 </script>
-
-<!DOCTYPE html>
-<html>
-
-<head>
-<title>Schedulo</title>
-
-<style>
-
-body{
-font-family:Poppin;
-background:linear-gradient(135deg,#eef2ff,#f8fafc);
-padding:20px;
-}
-
-.logo{
-display:flex;
-align-items:center;
-gap:10px;
-margin-bottom:20px;
-}
-
-</style>
-
-</head>
-
-<body>
-
-<div class="logo">
-<img src="schedulo-logo.png" width="50">
-<h1>SCHEDULO</h1>
-</div>
-
-<h2>Jangan Lupa Jadwal</h2>
-
-</body>
-</html>
 
 </body>
 </html>
