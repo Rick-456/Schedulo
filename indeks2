@@ -1,6 +1,3 @@
-<script>
-
-// =============================
 // DATA PIKET
 // =============================
 const piket={
@@ -17,17 +14,21 @@ const piket={
 // =============================
 let tugas=[
   {mapel:"Matematika",deskripsi:"PR Persamaan Kuadrat",deadline:"2026-03-28"},
-  {mapel:"B.Inggris",deskripsi:"Mempresentasikan Cerita",deadline:"2026-03-27"},
+  {mapel:"B.Inggris",deskripsi:"Presentasi Cerita",deadline:"2026-03-27"},
   {mapel:"Geografi",deskripsi:"Latihan Pemahaman",deadline:"2026-03-29"}
 ];
 
 // =============================
-// TANGGAL & PIKET HARI INI
+// TANGGAL & HARI
 // =============================
-const hari=new Date().toLocaleDateString("id-ID",{weekday:"long"});
-const tanggal=new Date().toLocaleDateString("id-ID",{dateStyle:"full"});
+const today=new Date();
+const hari=today.toLocaleDateString("id-ID",{weekday:"long"});
+const tanggal=today.toLocaleDateString("id-ID",{dateStyle:"full"});
 document.getElementById("tanggal").innerText=tanggal;
 
+// =============================
+// TAMPILKAN PIKET
+// =============================
 const piketList=document.getElementById("piket");
 if(piket[hari]){
   piket[hari].forEach(nama=>{
@@ -38,23 +39,24 @@ if(piket[hari]){
 }
 
 // =============================
-// TAMPILKAN TUGAS + DETEKSI H-1
+// TAMPILKAN TUGAS
 // =============================
 const taskContainer=document.getElementById("tasks");
 
 function tampilkanTugas(){
   taskContainer.innerHTML="";
-  const today=new Date();
+  const now=new Date();
 
   tugas.forEach(t=>{
     let div=document.createElement("div");
     let deadlineDate=new Date(t.deadline);
-    let selisih=(deadlineDate-today)/(1000*60*60*24);
+    let selisih=(deadlineDate-now)/(1000*60*60*24);
 
     div.className="task";
-    if(selisih<=1){
+
+    // H-4 sampai H-1 jadi merah
+    if(selisih<=4 && selisih>0){
       div.classList.add("overdue");
-      tampilNotif("⚠ Deadline dekat: "+t.mapel);
     }
 
     div.innerHTML=`
@@ -70,11 +72,13 @@ function tampilkanTugas(){
 // TAMBAH TUGAS
 // =============================
 function tambahTugas(){
-  let mapel=prompt("Nama mapel:");
-  let des=prompt("Deskripsi tugas:");
+  let m=prompt("Nama mapel:");
+  let d=prompt("Deskripsi:");
   let dl=prompt("Deadline (YYYY-MM-DD):");
-  tugas.push({mapel:mapel,deskripsi:des,deadline:dl});
-  tampilkanTugas();
+  if(m && d && dl){
+    tugas.push({mapel:m,deskripsi:d,deadline:dl});
+    tampilkanTugas();
+  }
 }
 
 // =============================
@@ -94,7 +98,6 @@ function tampilNotif(teks){
 
   document.body.appendChild(notif);
 
-  // suara
   new Audio("https://actions.google.com/sounds/v1/alarms/beep_short.ogg").play();
 
   setTimeout(()=>{
@@ -102,11 +105,30 @@ function tampilNotif(teks){
   },4000);
 }
 
-// Notif saat buka web
+// =============================
+// NOTIF OTOMATIS
+// =============================
 window.addEventListener("load",()=>{
   setTimeout(()=>{
-    tampilNotif("📢 Cek jadwal piket & tugas hari ini!");
-  },2000);
+
+    // Notif piket hari ini
+    if(piket[hari]){
+      tampilNotif("🧹 Hari ini "+hari+" ada jadwal piket!");
+    }
+
+    // Notif deadline H-4 sampai H-1
+    const now=new Date();
+
+    tugas.forEach(t=>{
+      let deadlineDate=new Date(t.deadline);
+      let selisih=Math.ceil((deadlineDate-now)/(1000*60*60*24));
+
+      if(selisih<=4 && selisih>=1){
+        tampilNotif("⏰ "+t.mapel+" deadline "+selisih+" hari lagi!");
+      }
+    });
+
+  },1500);
 });
 
 // =============================
@@ -131,7 +153,7 @@ function kirimAI(){
     jawaban="📚 Kamu punya "+tugas.length+" tugas.";
   }
   else if(input.includes("deadline")){
-    let terdekat=tugas.sort((a,b)=>new Date(a.deadline)-new Date(b.deadline))[0];
+    let terdekat=[...tugas].sort((a,b)=>new Date(a.deadline)-new Date(b.deadline))[0];
     jawaban="⏰ Deadline terdekat: "+terdekat.mapel+" pada "+terdekat.deadline;
   }
   else if(input.includes("piket")){
@@ -145,6 +167,7 @@ function kirimAI(){
   document.getElementById("aiInput").value="";
 }
 
+// Jalankan
 tampilkanTugas();
 
 </script>
