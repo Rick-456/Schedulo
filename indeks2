@@ -1,0 +1,150 @@
+<script>
+
+// =============================
+// DATA PIKET
+// =============================
+const piket={
+  Senin:["Steven Agustino","Lewis","Kaka Morenlo","Novita","Angela Natalie","Felicia Eza M.","Cherise Everlyn"],
+  Selasa:["Gregorius Yasera B.","Meylani Catherine","Michael Steven C.K.C","Calista Gabriela M.","Ailennia Aretha","Rhys Clayton"],
+  Rabu:["Valentino I.","Sandy","Lu Falensia W.","Viktoria Clara","Aurellia Latishia W.","Santo Wijaya"],
+  Kamis:["Elisa Agatha","Luvia Valens","Juliana Silvia","Erick Castiandy","Jeremiah Claudius M.","Delvin Juan Putra"],
+  Jumat:["Albert Steven","Gabriel Ibanez K.","Hernan Fransisko","Marcelia","Elsama Jhelisca","Cindy Gracelia L.","Callysta Christabel"],
+  Sabtu:["Ningsi Oktagrillislia","Elrica Chloe","Lenggo Alfredo","Dominic Bianca L.","Beny","Ceryl Arueputri"]
+};
+
+// =============================
+// DATA TUGAS
+// =============================
+let tugas=[
+  {mapel:"Matematika",deskripsi:"PR Persamaan Kuadrat",deadline:"2026-03-28"},
+  {mapel:"B.Inggris",deskripsi:"Mempresentasikan Cerita",deadline:"2026-03-27"},
+  {mapel:"Geografi",deskripsi:"Latihan Pemahaman",deadline:"2026-03-29"}
+];
+
+// =============================
+// TANGGAL & PIKET HARI INI
+// =============================
+const hari=new Date().toLocaleDateString("id-ID",{weekday:"long"});
+const tanggal=new Date().toLocaleDateString("id-ID",{dateStyle:"full"});
+document.getElementById("tanggal").innerText=tanggal;
+
+const piketList=document.getElementById("piket");
+if(piket[hari]){
+  piket[hari].forEach(nama=>{
+    let li=document.createElement("li");
+    li.textContent=nama;
+    piketList.appendChild(li);
+  });
+}
+
+// =============================
+// TAMPILKAN TUGAS + DETEKSI H-1
+// =============================
+const taskContainer=document.getElementById("tasks");
+
+function tampilkanTugas(){
+  taskContainer.innerHTML="";
+  const today=new Date();
+
+  tugas.forEach(t=>{
+    let div=document.createElement("div");
+    let deadlineDate=new Date(t.deadline);
+    let selisih=(deadlineDate-today)/(1000*60*60*24);
+
+    div.className="task";
+    if(selisih<=1){
+      div.classList.add("overdue");
+      tampilNotif("⚠ Deadline dekat: "+t.mapel);
+    }
+
+    div.innerHTML=`
+      <h4>${t.mapel}</h4>
+      <p>${t.deskripsi}</p>
+      <small>DL: ${t.deadline}</small>
+    `;
+    taskContainer.appendChild(div);
+  });
+}
+
+// =============================
+// TAMBAH TUGAS
+// =============================
+function tambahTugas(){
+  let mapel=prompt("Nama mapel:");
+  let des=prompt("Deskripsi tugas:");
+  let dl=prompt("Deadline (YYYY-MM-DD):");
+  tugas.push({mapel:mapel,deskripsi:des,deadline:dl});
+  tampilkanTugas();
+}
+
+// =============================
+// NOTIFIKASI + SUARA
+// =============================
+function tampilNotif(teks){
+  let notif=document.createElement("div");
+  notif.style.position="fixed";
+  notif.style.top="20px";
+  notif.style.right="20px";
+  notif.style.background="#ff4d4d";
+  notif.style.color="white";
+  notif.style.padding="12px 18px";
+  notif.style.borderRadius="12px";
+  notif.style.zIndex="999";
+  notif.innerText=teks;
+
+  document.body.appendChild(notif);
+
+  // suara
+  new Audio("https://actions.google.com/sounds/v1/alarms/beep_short.ogg").play();
+
+  setTimeout(()=>{
+    notif.remove();
+  },4000);
+}
+
+// Notif saat buka web
+window.addEventListener("load",()=>{
+  setTimeout(()=>{
+    tampilNotif("📢 Cek jadwal piket & tugas hari ini!");
+  },2000);
+});
+
+// =============================
+// AI SEDERHANA
+// =============================
+function toggleAI(){
+  let box=document.getElementById("aiBox");
+  if(box){
+    box.style.display=box.style.display==="none"?"block":"none";
+  }
+}
+
+function kirimAI(){
+  let input=document.getElementById("aiInput").value.toLowerCase();
+  let chat=document.getElementById("chatArea");
+
+  chat.innerHTML+=`<p><b>Kamu:</b> ${input}</p>`;
+
+  let jawaban="";
+
+  if(input.includes("tugas")){
+    jawaban="📚 Kamu punya "+tugas.length+" tugas.";
+  }
+  else if(input.includes("deadline")){
+    let terdekat=tugas.sort((a,b)=>new Date(a.deadline)-new Date(b.deadline))[0];
+    jawaban="⏰ Deadline terdekat: "+terdekat.mapel+" pada "+terdekat.deadline;
+  }
+  else if(input.includes("piket")){
+    jawaban="🧹 Hari ini piket: "+hari;
+  }
+  else{
+    jawaban="🤖 AI belum mengerti. Coba tanya tentang tugas atau piket.";
+  }
+
+  chat.innerHTML+=`<p><b>AI:</b> ${jawaban}</p>`;
+  document.getElementById("aiInput").value="";
+}
+
+tampilkanTugas();
+
+</script>
