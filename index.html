@@ -1,10 +1,207 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SCHEDULO</title>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;700&display=swap" rel="stylesheet">
+
+  <style>
+    /* Font & Background */
+    body {
+      font-family: 'Quicksand', sans-serif;
+      background: linear-gradient(135deg,#eef2ff,#f8fafc);
+      margin:0;
+      padding:0;
+    }
+
+    /* Header */
+    header{
+      background:white;
+      padding:15px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      box-shadow:0 2px 10px rgba(0,0,0,0.05);
+      position: sticky;
+      top:0;
+      z-index: 10;
+    }
+
+    .logo{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      font-size:20px;
+      font-weight:700;
+      color:#2d5be3;
+    }
+
+    button{
+      background:#2d5be3;
+      color:white;
+      border:none;
+      padding:10px 20px;
+      border-radius:10px;
+      cursor:pointer;
+      transition: 0.3s;
+    }
+    button:hover{
+      background:#1f43c8;
+    }
+
+    /* Banner ala Discord */
+    .banner {
+      position: relative;
+      width: 100%;
+      height: 200px;
+      overflow: hidden;
+      border-radius: 15px;
+      margin-bottom: 40px;
+    }
+
+    .banner-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .profile {
+      position: absolute;
+      bottom: -30px;
+      left: 30px;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .profile-img {
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      border: 3px solid white;
+      object-fit: cover;
+    }
+
+    .profile h2 {
+      color: white;
+      text-shadow: 0 2px 5px rgba(0,0,0,0.5);
+      margin: 0;
+    }
+
+    /* Container */
+    .container{
+      padding:30px;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    h1,h2,h3,h4{
+      margin:0 0 10px 0;
+    }
+
+    /* Card */
+    .card{
+      background:white;
+      padding:20px;
+      border-radius:15px;
+      box-shadow:0 5px 15px rgba(0,0,0,0.05);
+      margin-top:20px;
+      transition: 0.3s;
+    }
+    .card:hover{
+      transform: translateY(-3px);
+      box-shadow:0 8px 20px rgba(0,0,0,0.1);
+    }
+
+    .tasks{
+      display:flex;
+      gap:20px;
+      flex-wrap:wrap;
+    }
+
+    .task{
+      background:white;
+      border:1px solid #eee;
+      padding:15px;
+      border-radius:12px;
+      width:200px;
+      transition:0.3s;
+    }
+    .task:hover{
+      transform: translateY(-2px);
+      box-shadow:0 5px 15px rgba(0,0,0,0.1);
+    }
+
+    .overdue{
+      border:2px solid #ff4d4d;
+    }
+
+    ul{
+      padding-left:20px;
+    }
+
+    /* Tanggal */
+    #tanggal{
+      margin-top:5px;
+      color:#555;
+      font-weight:500;
+    }
+
+    @media(max-width:600px){
+      .tasks{
+        flex-direction: column;
+        align-items: center;
+      }
+      .profile{
+        left: 20px;
+      }
+      .banner{
+        height:150px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- Header -->
+<header>
+  <div class="logo">
+    <img src="schedulo-logo.png" width="40" alt="Logo">
+    SCHEDULO
+  </div>
+  <button onclick="tambahTugas()">Tambah Tugas</button>
+</header>
+
+<!-- Banner -->
+<div class="banner">
+  <img src="banner.png" alt="Banner" class="banner-img">
+  </div>
+</div>
+
+<!-- Main Content -->
+<div class="container">
+  <h1>Selamat Datang 👋</h1>
+  <p id="tanggal"></p>
+
+  <!-- Card Jadwal Piket -->
+  <div class="card">
+    <h3>Jadwal Piket Hari Ini</h3>
+    <ul id="piket"></ul>
+  </div>
+
+  <!-- Card Tugas Belajar -->
+  <div class="card">
+    <h3>Daftar Tugas Belajar</h3>
+    <div class="tasks" id="tasks"></div>
+  </div>
+</div>
+
+<!-- Script -->
 <script>
-
-document.addEventListener("DOMContentLoaded", function(){
-
-// ======================
-// DATA PIKET
-// ======================
 const piket={
   Senin:["Steven Agustino","Lewis","Kaka Morenlo","Novita","Angela Natalie","Felicia Eza M.","Cherise Everlyn"],
   Selasa:["Gregorius Yasera B.","Meylani Catherine","Michael Steven C.K.C","Calista Gabriela M.","Ailennia Aretha","Rhys Clayton"],
@@ -14,28 +211,18 @@ const piket={
   Sabtu:["Ningsi Oktagrillislia","Elrica Chloe","Lenggo Alfredo","Dominic Bianca L.","Beny","Ceryl Arueputri"]
 };
 
-// ======================
-// DATA TUGAS
-// ======================
 let tugas=[
-  {mapel:"Matematika",deskripsi:"PR Persamaan Kuadrat",deadline:"2026-03-28"}
+  {mapel:"CODING",deskripsi:"Aplikasi/Website berbasis A.I",deadline:"4 Mei 2026"},
+  {mapel:"KIMIA",deskripsi:"Ulangan Kimia (Prinsip-Prinsip Kimia Hijau)",deadline:"8 Mei 2026"},
+  {mapel:"AGAMA",deskripsi:"Tugas Mmebikin Kartu",deadline:"7 Mei 2026"}
 ];
 
-// ======================
-// TANGGAL
-// ======================
-const today=new Date();
-const hari=today.toLocaleDateString("id-ID",{weekday:"long"});
-const tanggal=today.toLocaleDateString("id-ID",{dateStyle:"full"});
+const hari=new Date().toLocaleDateString("id-ID",{weekday:"long"});
+const tanggal=new Date().toLocaleDateString("id-ID",{dateStyle:"full"});
+document.getElementById("tanggal").innerText=tanggal;
 
-const tanggalEl=document.getElementById("tanggal");
-if(tanggalEl) tanggalEl.innerText=tanggal;
-
-// ======================
-// TAMPILKAN PIKET
-// ======================
 const piketList=document.getElementById("piket");
-if(piketList && piket[hari]){
+if(piket[hari]){
   piket[hari].forEach(nama=>{
     let li=document.createElement("li");
     li.textContent=nama;
@@ -43,65 +230,31 @@ if(piketList && piket[hari]){
   });
 }
 
-// ======================
-// TAMPILKAN TUGAS
-// ======================
 const taskContainer=document.getElementById("tasks");
-
 function tampilkanTugas(){
-  if(!taskContainer) return;
   taskContainer.innerHTML="";
   tugas.forEach(t=>{
     let div=document.createElement("div");
+    div.className="task overdue";
     div.innerHTML=`
-      <b>${t.mapel}</b><br>
-      ${t.deskripsi}<br>
-      <small>Deadline: ${t.deadline}</small>
-      <hr>
+      <h4>${t.mapel}</h4>
+      <p>${t.deskripsi}</p>
+      <small>DL: ${t.deadline}</small>
     `;
     taskContainer.appendChild(div);
   });
 }
 
-window.tambahTugas=function(){
+function tambahTugas(){
   let mapel=prompt("Nama mapel:");
-  let des=prompt("Deskripsi:");
-  let dl=prompt("Deadline (format 2026-03-30):");
-
-  if(mapel && des && dl){
-    tugas.push({mapel:mapel,deskripsi:des,deadline:dl});
-    tampilkanTugas();
-  }
-};
+  let des=prompt("Deskripsi tugas:");
+  let dl=prompt("Deadline:");
+  tugas.push({mapel:mapel,deskripsi:des,deadline:dl});
+  tampilkanTugas();
+}
 
 tampilkanTugas();
-
-// ======================
-// AI REMINDER
-// ======================
-function cekDeadline(){
-  tugas.forEach(t=>{
-    let deadline=new Date(t.deadline);
-    let selisih=Math.ceil((deadline - today)/(1000*60*60*24));
-
-    if(selisih>=1 && selisih<=4){
-      alert(`🤖 Schedulo AI:\nTugas ${t.mapel} deadline dalam ${selisih} hari!`);
-    }
-
-    if(selisih===0){
-      alert(`🚨 Hari ini deadline ${t.mapel}!`);
-    }
-  });
-}
-
-function cekPiket(){
-  if(piket[hari]){
-    alert("🤖 Schedulo AI:\nHari ini jadwal piket:\n"+piket[hari].join(", "));
-  }
-}
-
-cekDeadline();
-cekPiket();
-
-});
 </script>
+
+</body>
+</html>
