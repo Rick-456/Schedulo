@@ -1,5 +1,7 @@
 <script>
 
+document.addEventListener("DOMContentLoaded", function(){
+
 // ======================
 // DATA PIKET
 // ======================
@@ -13,12 +15,10 @@ const piket={
 };
 
 // ======================
-// DATA TUGAS (Format wajib YYYY-MM-DD)
+// DATA TUGAS
 // ======================
 let tugas=[
-  {mapel:"Matematika",deskripsi:"PR Persamaan Kuadrat",deadline:"2026-03-28"},
-  {mapel:"B.Inggris",deskripsi:"Presentasi Cerita",deadline:"2026-03-27"},
-  {mapel:"Geografi",deskripsi:"Latihan Pemahaman",deadline:"2026-03-29"}
+  {mapel:"Matematika",deskripsi:"PR Persamaan Kuadrat",deadline:"2026-03-28"}
 ];
 
 // ======================
@@ -27,13 +27,15 @@ let tugas=[
 const today=new Date();
 const hari=today.toLocaleDateString("id-ID",{weekday:"long"});
 const tanggal=today.toLocaleDateString("id-ID",{dateStyle:"full"});
-document.getElementById("tanggal").innerText=tanggal;
+
+const tanggalEl=document.getElementById("tanggal");
+if(tanggalEl) tanggalEl.innerText=tanggal;
 
 // ======================
 // TAMPILKAN PIKET
 // ======================
 const piketList=document.getElementById("piket");
-if(piket[hari]){
+if(piketList && piket[hari]){
   piket[hari].forEach(nama=>{
     let li=document.createElement("li");
     li.textContent=nama;
@@ -47,77 +49,59 @@ if(piket[hari]){
 const taskContainer=document.getElementById("tasks");
 
 function tampilkanTugas(){
+  if(!taskContainer) return;
   taskContainer.innerHTML="";
   tugas.forEach(t=>{
     let div=document.createElement("div");
-    div.className="task";
     div.innerHTML=`
-      <h4>${t.mapel}</h4>
-      <p>${t.deskripsi}</p>
-      <small>DL: ${t.deadline}</small>
+      <b>${t.mapel}</b><br>
+      ${t.deskripsi}<br>
+      <small>Deadline: ${t.deadline}</small>
+      <hr>
     `;
     taskContainer.appendChild(div);
   });
 }
 
-function tambahTugas(){
+window.tambahTugas=function(){
   let mapel=prompt("Nama mapel:");
-  let des=prompt("Deskripsi tugas:");
-  let dl=prompt("Deadline (format: 2026-03-30):");
-  tugas.push({mapel:mapel,deskripsi:des,deadline:dl});
-  tampilkanTugas();
-}
+  let des=prompt("Deskripsi:");
+  let dl=prompt("Deadline (format 2026-03-30):");
+
+  if(mapel && des && dl){
+    tugas.push({mapel:mapel,deskripsi:des,deadline:dl});
+    tampilkanTugas();
+  }
+};
 
 tampilkanTugas();
 
 // ======================
-// AI ASSISTANT SYSTEM
+// AI REMINDER
 // ======================
-
-function bunyiNotif(){
-  let audio=new Audio("https://www.soundjay.com/buttons/sounds/button-3.mp3");
-  audio.play();
-}
-
-function tampilkanAIpesan(pesan){
-  alert("🤖 Schedulo AI:\n\n"+pesan);
-  bunyiNotif();
-}
-
-function cekDeadlineAI(){
+function cekDeadline(){
   tugas.forEach(t=>{
     let deadline=new Date(t.deadline);
-    let selisih=Math.ceil((deadline-today)/(1000*60*60*24));
+    let selisih=Math.ceil((deadline - today)/(1000*60*60*24));
 
-    if(selisih<=4 && selisih>=1){
-      tampilkanAIpesan(
-        `Tugas ${t.mapel} akan deadline dalam ${selisih} hari!\nSegera kerjakan ya 🔥`
-      );
+    if(selisih>=1 && selisih<=4){
+      alert(`🤖 Schedulo AI:\nTugas ${t.mapel} deadline dalam ${selisih} hari!`);
     }
 
     if(selisih===0){
-      tampilkanAIpesan(
-        `Hari ini deadline ${t.mapel}!\nJANGAN LUPA DIKUMPULKAN 🚨`
-      );
+      alert(`🚨 Hari ini deadline ${t.mapel}!`);
     }
   });
 }
 
-function cekPiketAI(){
+function cekPiket(){
   if(piket[hari]){
-    tampilkanAIpesan(
-      `Hari ini jadwal piket!\n\nPetugas:\n${piket[hari].join(", ")}`
-    );
+    alert("🤖 Schedulo AI:\nHari ini jadwal piket:\n"+piket[hari].join(", "));
   }
 }
 
-// ======================
-// JALANKAN AI OTOMATIS
-// ======================
+cekDeadline();
+cekPiket();
 
-window.onload=function(){
-  cekDeadlineAI();
-  cekPiketAI();
-};
-
+});
 </script>
